@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Code ni Juan Simple Rich Text Editor</title>
+	<script type="text/javascript" src="cnj.simple.richtext.js"></script>
+</head>
+<body>
+	<form>
+		<textarea id="testTextArea"></textarea>
+	</form>
+</body>
+
+<script type="text/javascript">
+
+	//initialise the class
+	(new cnjSimpleRichText()).init({
+		selector: 'testTextArea',
+		width: '800px'
+	});
+</script>
+
+</html>
