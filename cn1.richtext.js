@@ -97,61 +97,68 @@ var CN1SimpleRichText = new (function () {
 			} else {
 				element.setAttribute('type', defaultElements[el].type);
 			}
+
+			element.setAttribute('title', defaultElements[el].command);
 			element.innerHTML = defaultElements[el].innerHTML;
 			element.style.margin = '0 5px 0 0';
 			element.style.height = '25px';
 
-			//check if fonts or headings since those are droplists box
-			if (isThisElement(defaultElements[el], 'fontName')
-				|| isThisElement(defaultElements[el], 'fontSize')
-				|| isThisElement(defaultElements[el], 'formatBlock')) {
+			var command;
+			var argument = null;
 
-				for(var o = 0 in defaultElements[el].options) {
-					// create new option element
-					var opt = document.createElement('option');
+			if (defaultElements[el].type.indexOf('button') !== -1) {
 
-					// create text node to add to option element (opt)
-					opt.appendChild( document.createTextNode(defaultElements[el].options[o]) );
+				var showCode = false
+				var isPrompt = false;
 
-					// set value property of opt
-					opt.value = defaultElements[el].options[o]; 
+				element.onclick = function () {
+					command = this.getAttribute('title');
+					if (command == 'viewSourceCode') {
+						showCode = execViewSourceCommand(element, contentEditable, showCode);
+					} else {
+						switch (command) {
+							case 'insertImage':
+								argument = prompt('Enter your URL: ');
+								isPrompt = true;
+								break;
+							case 'createLink':
+								argument = prompt('Enter image your URL: ');
+								isPrompt = true;
+								break;
+						}
 
-					// add opt to end of select box (sel)
-					element.appendChild(opt); 
+						if ((argument !== null && isPrompt) || !isPrompt)
+							cn1ContentRichTextField.document.execCommand(command, false, argument);
+					}
+			
+				};
+			} else {
+
+				//check if fonts or headings since those are droplists box
+				if (isThisElement(defaultElements[el], 'fontName')
+					|| isThisElement(defaultElements[el], 'fontSize')
+					|| isThisElement(defaultElements[el], 'formatBlock')) {
+
+					for(var o = 0 in defaultElements[el].options) {
+						// create new option element
+						var opt = document.createElement('option');
+
+						// create text node to add to option element (opt)
+						opt.appendChild( document.createTextNode(defaultElements[el].options[o]) );
+
+						// set value property of opt
+						opt.value = defaultElements[el].options[o]; 
+
+						// add opt to end of select box (sel)
+						element.appendChild(opt); 
+					}
 				}
 
-				//fonts //H1, H2, H3 etc
-				element.setAttribute('onchange', 'cn1ContentRichTextField.document.execCommand(\''+defaultElements[el].command+'\', false, this.value);');
-
-			} else if (isThisElement(defaultElements[el], 'createLink')) { 
-				element.setAttribute('onclick', 'cn1ContentRichTextField.document.execCommand(\''+defaultElements[el].command+'\', false, prompt(\'Enter your URL: \'));');
-
-			} else if (isThisElement(defaultElements[el], 'unlink')) { 
-				element.setAttribute('onclick', 'cn1ContentRichTextField.document.execCommand(\''+defaultElements[el].command+'\');');
-
-			} else if (isThisElement(defaultElements[el], 'insertImage')) { 
-				element.setAttribute('onclick', 'cn1ContentRichTextField.document.execCommand(\''+defaultElements[el].command+'\', false, prompt(\'Enter image your URL: \'));');
-
-			} else if (isThisElement(defaultElements[el], 'foreColor')
-				|| isThisElement(defaultElements[el], 'hiliteColor')) { 
-
-				element.setAttribute('onchange', 'cn1ContentRichTextField.document.execCommand(\''+defaultElements[el].command+'\', false, this.value);');
-
-			} else if (isThisElement(defaultElements[el], 'viewSourceCode')) { 
-				//for viewing the source code
-				var showCode = false
-				element.onclick = function () {
-					if (!showCode) {
-						contentEditable.contentDocument.getElementsByTagName('body')[0].textContent = contentEditable.contentDocument.getElementsByTagName('body')[0].innerHTML;
-						showCode = true;
-					} else {
-						contentEditable.contentDocument.getElementsByTagName('body')[0].innerHTML = contentEditable.contentDocument.getElementsByTagName('body')[0].textContent;
-						showCode = false;
-					}
+				element.onchange = function () {
+					command = this.getAttribute('title');
+					cn1ContentRichTextField.document.execCommand(command, false, this.value);
 				};
 
-			} else {
-				element.setAttribute('onclick', 'cn1ContentRichTextField.document.execCommand(\''+defaultElements[el].command+'\');');
 			}
 
 			if (el > 0) {
@@ -192,6 +199,27 @@ var CN1SimpleRichText = new (function () {
 		//event on input load
     	loadEvent(contentEditable, args);
 	};
+
+
+	/**
+	 * View source command
+	 * 
+	 * @param  {[type]} element         [description]
+	 * @param  {[type]} contentEditable [description]
+	 * @param  {[type]} showCode        [description]
+	 * @return {[type]}                 [description]
+	 */
+	function execViewSourceCommand(element, contentEditable, showCode) {
+		if (!showCode) {
+			contentEditable.contentDocument.getElementsByTagName('body')[0].textContent = contentEditable.contentDocument.getElementsByTagName('body')[0].innerHTML;
+			showCode = true;
+		} else {
+			contentEditable.contentDocument.getElementsByTagName('body')[0].innerHTML = contentEditable.contentDocument.getElementsByTagName('body')[0].textContent;
+			showCode = false;
+		}
+
+		return showCode;
+	}
 
 	/**
 	 * event on input load
