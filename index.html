@@ -1,22 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Code ni Juan Simple Rich Text Editor</title>
-	<script type="text/javascript" src="cnj.simple.richtext.js"></script>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<script type="text/javascript" src="cn1.richtext.js"></script>
 </head>
 <body>
-	<form>
-		<textarea id="testTextArea"></textarea>
+	<form name="formSample" action="" method="post">
+		<textarea id="testTextArea" rows="10" cols="100"><h1>CN1 Rich Text Editor</h1><h3>Hello,</h3><div>This is my simple rich text editor!</div><div><br></div><div><b>bold</b></div><div><br></div><div><i>italic</i></div><div><ul><li>bullet</li></ul></div><div><ol><li>numbered</li></ol><div><h3><font face="Verdana">CN1 Rich <font size="5">Text <strike>Editor</strike></font></font></h3></div></div></textarea>
+		<br/>
+		<input type="submit" value="Submit Test Data">
 	</form>
 </body>
 
 <script type="text/javascript">
+	CN1SimpleRichText.init(
+		{
+			selector: 'testTextArea',
 
-	//initialise the class
-	(new cnjSimpleRichText()).init({
-		selector: 'testTextArea',
-		width: '800px'
-	});
+			//if true this will enable the forecolor and background color
+			// color: true,  
+			
+			// width: '1000px',
+			height: '400px'
+		}
+	);
 </script>
 
 </html>
