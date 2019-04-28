@@ -34,7 +34,7 @@ var CN1SimpleRichText = new (function () {
 			{command: 'insertOrderedList', type: 'button', innerHTML: '<i class=\'fa fa-list-ol\'></i>'},
 			{command: 'indent', type: 'button', innerHTML: '<i class=\'fa fa-indent\'></i>'},
 			{command: 'outdent', type: 'button', innerHTML: '<i class=\'fa fa-outdent\'></i>'},
-			{command: 'formatBlock', type: 'select', innerHTML: '', options: ['H1', 'H2', 'H3', 'H4']},
+			{command: 'formatBlock', type: 'select', innerHTML: '', options: ['H1', 'H2', 'H3', 'H4', 'blockquote']},
 			{command: 'insertHorizontalRule', type: 'button', innerHTML: 'HR'},
 			{command: 'createLink', type: 'button', innerHTML: '<i class=\'fa fa-link\'></i>'},
 			{command: 'unlink', type: 'button', innerHTML: '<i class=\'fa fa-unlink\'></i>'},
