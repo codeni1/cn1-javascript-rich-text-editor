@@ -43,6 +43,7 @@ var CN1SimpleRichText = new (function () {
 			{command: 'insertImage', type: 'button', innerHTML: '<i class=\'fa fa-file-image\'></i>'},
 			{command: 'viewSourceCode', type: 'button', innerHTML: '<i class=\'fa fa-code\'></i>'},
 			{command: 'removeFormat', type: 'button', innerHTML: 'Clear'},
+			{command: 'removeFormatCustom', type: 'button', innerHTML: 'Clear Custom'},
 		];
 
 		//add detection if browser support HTML5
@@ -108,13 +109,16 @@ var CN1SimpleRichText = new (function () {
 
 			if (defaultElements[el].type.indexOf('button') !== -1) {
 
-				var showCode = false
+				var showCode = false;
 				var isPrompt = false;
 
 				element.onclick = function () {
 					command = this.getAttribute('title');
 					if (command == 'viewSourceCode') {
 						showCode = execViewSourceCommand(element, contentEditable, showCode);
+					} else if (command == 'removeFormatCustom') {
+						var text = contentEditable.contentWindow.document.getSelection().toString();
+						console.log(text);
 					} else {
 						switch (command) {
 							case 'insertImage':
@@ -200,7 +204,6 @@ var CN1SimpleRichText = new (function () {
     	loadEvent(contentEditable, args);
 	};
 
-
 	/**
 	 * View source command
 	 * 
@@ -231,7 +234,7 @@ var CN1SimpleRichText = new (function () {
 	function loadEvent(contentEditable, args) {
 		//this will get value from the edit content element or iframe
         contentEditable.contentWindow.document.querySelector('body').oninput = function(k) {
-        	document.getElementById(args.selector).innerHTML = contentEditable.contentDocument.getElementsByTagName('body')[0].innerHTML;
+        	document.getElementById(args.selector).textContent = contentEditable.contentDocument.getElementsByTagName('body')[0].innerHTML;
         }
 	}
 
@@ -247,11 +250,6 @@ var CN1SimpleRichText = new (function () {
   		 contentEditable.contentWindow.document.open();
          contentEditable.contentWindow.document.write('<html><body>'+data+'</body></html>');
          contentEditable.contentWindow.document.close();
-	}
-
-
-	self.setContent = function(content) {
-		//to be continued
 	}
 
 	/**
